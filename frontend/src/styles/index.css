@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: #0e131e;
+  --card: #161d2a;
+  --line: rgba(255, 255, 255, 0.08);
+  --gold: #e5c07b;
+  --ink: #f4f4f7;
+  --ink-dim: #a3a8b5;
+  --ink-mute: #69707f;
+  --tg-height: 100dvh;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Inter, system-ui, sans-serif;
+  letter-spacing: -0.011em;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv01", "cv02", "ss01";
+}
+
+/* Глубокий тёмно-сине-графитовый градиент во весь экран.
+   Верхние ~18% — ровный цвет #1e2942, чтобы зона чёлки/статус-бара
+   совпадала с плашкой без видимого стыка. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #1e2942 0%,
+    #1e2942 16%,
+    #1a2336 38%,
+    #141d2e 64%,
+    #0d1320 100%
+  );
+  z-index: 0;
+}
+
+body {
+  min-height: 100dvh;
+  min-height: var(--tg-height);
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  min-height: var(--tg-height);
+  display: flex;
+  flex-direction: column;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+/* Табличные цифры для всех денежных значений */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+@layer components {
+  .card {
+    @apply rounded-2.5xl border border-bg-line shadow-card;
+    background: linear-gradient(180deg, #1b2433 0%, #151c29 100%);
+  }
+
+  .card-flat {
+    @apply rounded-2xl border border-bg-line bg-bg-card;
+  }
+
+  .neon-text { @apply text-ink; letter-spacing: -0.02em; }
+
+  .brand-text { color: var(--gold); letter-spacing: -0.01em; }
+
+  .neon-border { @apply border border-bg-line; }
+
+  /* Кнопки */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-[14px] px-4 py-3 text-[15px] font-semibold transition-all duration-150 active:scale-[0.97] disabled:opacity-45 disabled:pointer-events-none;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary {
+    @apply btn;
+    background: linear-gradient(180deg, #f0d195 0%, #e5c07b 55%, #d8b169 100%);
+    color: #211a0e;
+    box-shadow: 0 6px 18px -8px rgba(229, 192, 123, 0.55), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  }
+  .btn-primary:active { background: linear-gradient(180deg, #e8c587 0%, #d8b169 100%); }
+  .btn-ghost {
+    @apply btn bg-white/[0.05] hover:bg-white/[0.08] text-ink;
+    box-shadow: 0 0 0 1px var(--line) inset;
+  }
+  .btn-danger {
+    @apply btn text-neon-red bg-neon-red/[0.10] hover:bg-neon-red/[0.16];
+    box-shadow: 0 0 0 1px rgba(246, 70, 93, 0.28) inset;
+  }
+  .btn-sm { @apply px-3 py-2 text-[13px] rounded-xl; }
+
+  /* Инпуты */
+  .input {
+    @apply w-full rounded-[14px] bg-bg-raised border border-bg-line px-3.5 py-3 text-ink placeholder-ink-mute outline-none transition;
+  }
+  .input:focus {
+    border-color: rgba(229, 192, 123, 0.6);
+    box-shadow: 0 0 0 3px rgba(229, 192, 123, 0.14);
+  }
+
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-widest2 text-ink-mute mb-1.5;
+  }
+
+  /* Чипы */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold;
+    letter-spacing: -0.005em;
+  }
+  .chip-cyan { @apply chip bg-white/[0.05] text-ink-dim border border-bg-line; }
+  .chip-green { @apply chip bg-neon-green/[0.12] text-neon-green border border-neon-green/25; }
+  .chip-magenta { @apply chip bg-neon-magenta/[0.10] text-neon-magenta border border-neon-magenta/25; }
+  .chip-violet { @apply chip bg-neon-violet/[0.12] text-neon-violet border border-neon-violet/25; }
+  .chip-gold { @apply chip bg-neon-gold/[0.13] text-neon-gold border border-neon-gold/30; }
+  .chip-amber { @apply chip border; color: #f0b73d; background: rgba(240,183,61,0.12); border-color: rgba(240,183,61,0.3); }
+  .chip-mute { @apply chip bg-white/[0.045] text-ink-dim border border-bg-line; }
+
+  /* Иконка в «плитке» — единый стиль для бейджей с иконкой */
+  .icon-tile {
+    @apply inline-flex items-center justify-center rounded-xl;
+  }
+
+  /* Скелетон-загрузка (ощущается быстрее спиннера) */
+  .skel {
+    @apply rounded-xl;
+    background: linear-gradient(100deg, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 70%);
+    background-size: 200% 100%;
+    animation: skel-shimmer 1.4s ease-in-out infinite;
+  }
+  @keyframes skel-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Минимальное свечение для ключевых цифр (Dark OLED) */
+  .glow-gold { text-shadow: 0 0 18px rgba(229, 192, 123, 0.35); }
+
+  .safe-top { padding-top: max(env(safe-area-inset-top), 0px); }
+  .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+}
+
+/* Доступность: видимый фокус для клавиатуры/скринридеров */
+:focus-visible {
+  outline: 2px solid rgba(229, 192, 123, 0.7);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Уважаем системную настройку «меньше движения» */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::-webkit-scrollbar { width: 0; height: 0; }
+::-webkit-scrollbar-thumb { background: transparent; }
+
+button, a, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (display-mode: standalone) {
+  html, body { background: var(--bg); }
+}
